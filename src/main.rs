@@ -1,7 +1,7 @@
 use eframe::egui;
 use nvml_wrapper::enum_wrappers::device::TemperatureSensor;
 use nvml_wrapper::Nvml;
-use egui::Color32;
+use egui::{Color32, Pos2, Rect, Response, Shape, Stroke, Widget};
 
 struct GpuData{
     name: String,
@@ -119,15 +119,39 @@ impl eframe::App for MyApp {
             let c_to_f = ["°C", "°F"];
             let curr_temp_type = c_to_f[self.c_to_f_indexer];
 
-            ui.label("Thermometer");
-            let thermometer = egui::ProgressBar::new(self.gpu_data.temperature as f32/100.0)
-            .fill(color_gradient(self.gpu_data.temperature))
-            .animate(self.animate_thermometer_bar);
-            self.animate_thermometer_bar = ui
-            .add(thermometer)
-            .on_hover_text(self.gpu_data.temperature.to_string().as_str().to_owned() + curr_temp_type)
-            .hovered();
+            ui.horizontal(|ui| {
+                ui.label("Thermometer");
 
+
+                //Bar portion of thermometer
+                let thermometer = egui::ProgressBar::new(self.gpu_data.temperature as f32/100.0)
+                .fill(color_gradient(self.gpu_data.temperature))
+                .animate(self.animate_thermometer_bar);
+                self.animate_thermometer_bar = ui
+                .add(thermometer)
+                .on_hover_text(self.gpu_data.temperature.to_string().as_str().to_owned() + curr_temp_type)
+                .hovered();
+
+                // Bulb/Circle portion of thermometer
+
+                // let rect = Rect::from_min_max({x: 80.0, y:80.0}, pos2(280.0, 280.0));
+
+                // ui.label(self.gpu_data.temperature.to_string() + curr_temp_type);
+                // let painter = ui.painter();
+                // ui.allocate_ui_at_rect(max_rect, add_contents)
+                // painter.circle(
+                //     egui::Pos2 {
+                //         x: 50.0,
+                //         y: 50.0,
+                //     },
+                //     20.0,
+                //     color_gradient(self.gpu_data.temperature),
+                //     Stroke {
+                //         width: 0.0,
+                //         color: Color32::from_rgb(255, 255, 255),
+                //     },
+                // );
+            });
             //Testing bar
             //ui.add(egui::Slider::new(&mut self.tester, 0..=100).text("Testing Bar"));
 
